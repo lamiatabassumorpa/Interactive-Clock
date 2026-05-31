@@ -107,19 +107,32 @@ void drawNumbers() {
     }
 }
 
-void drawHand(float angle, float length, float r, float g, float b, int thickness) {
+void drawHand(float angle, float length, float tailLength,
+              float r, float g, float b, int thickness) {
     float rad = angle * PI / 180;
+
+    // Main hand
     int x1 = (int)cx;
     int y1 = (int)cy;
     int x2 = (int)(cx + length * cos(rad));
     int y2 = (int)(cy + length * sin(rad));
+
+    // Tail (opposite direction)
+    int xt = (int)(cx - tailLength * cos(rad));
+    int yt = (int)(cy - tailLength * sin(rad));
+
     glColor3f(r, g, b);
     glLineWidth(thickness);
+
+    // Draw main hand
     drawBresenhamLine(x1, y1, x2, y2);
     for (int t = 1; t < thickness; t++) {
         drawBresenhamLine(x1+t, y1, x2+t, y2);
         drawBresenhamLine(x1, y1+t, x2, y2+t);
     }
+
+    // Draw tail
+    drawBresenhamLine(x1, y1, xt, yt);
 }
 
 void drawDigitalTime() {
@@ -181,12 +194,20 @@ void drawClockHands() {
     float minAngle  = 90 - m * 6 - s * 0.1f;
     float hourAngle = 90 - h * 30 - m * 0.5f;
 
-    drawHand(hourAngle, radius * 0.5f, 1, 1, 1, 5);
-    drawHand(minAngle, radius * 0.75f, 1, 1, 1, 3);
-    drawHand(secAngle, radius * 0.9f, 1, 0, 0, 1);
+    // Hour hand — thick white, small tail
+    drawHand(hourAngle, radius*0.5f, 20, 1, 1, 1, 5);
 
+    // Minute hand — medium white, small tail
+    drawHand(minAngle, radius*0.75f, 25, 1, 1, 1, 3);
+
+    // Second hand — thin red, longer tail
+    drawHand(secAngle, radius*0.9f, 35, 1, 0, 0, 1);
+
+    // Center dots
+    glColor3f(0.2f, 0.2f, 0.2f);
+    drawFilledCircle(cx, cy, 8);
     glColor3f(1, 0, 0);
-    drawFilledCircle(cx, cy, 6);
+    drawFilledCircle(cx, cy, 5);
 }
 
 void display() {
