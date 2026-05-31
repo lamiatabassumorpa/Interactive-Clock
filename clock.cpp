@@ -122,23 +122,10 @@ void drawHand(float angle, float length, float r, float g, float b, int thicknes
     }
 }
 
-void drawText(float x, float y, const char* text) {
-    glRasterPos2f(x, y);
-    while(*text)
-        glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, *text++);
-}
-
-void drawBigText(float x, float y, const char* text) {
-    glRasterPos2f(x, y);
-    while(*text)
-        glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, *text++);
-}
-
 void drawDigitalTime() {
     time_t now = time(0);
     struct tm* t = localtime(&now);
 
-    // Digital time box
     glColor3f(0.1f, 0.1f, 0.3f);
     glBegin(GL_QUADS);
     glVertex2f(160, 55);
@@ -147,7 +134,6 @@ void drawDigitalTime() {
     glVertex2f(160, 110);
     glEnd();
 
-    // Box border
     glColor3f(1.0f, 0.6f, 0.0f);
     glBegin(GL_LINE_LOOP);
     glVertex2f(160, 55);
@@ -156,7 +142,6 @@ void drawDigitalTime() {
     glVertex2f(160, 110);
     glEnd();
 
-    // Time text
     char timeStr[20];
     sprintf(timeStr, "%02d:%02d:%02d",
         t->tm_hour, t->tm_min, t->tm_sec);
@@ -167,7 +152,6 @@ void drawDigitalTime() {
     while(*s)
         glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, *s++);
 
-    // Date text
     char dateStr[30];
     const char* days[] = {"Sun","Mon","Tue","Wed","Thu","Fri","Sat"};
     const char* months[] = {"Jan","Feb","Mar","Apr","May","Jun",
@@ -217,7 +201,7 @@ void display() {
 
 void timer(int val) {
     glutPostRedisplay();
-    glutTimerFunc(1000, timer, 0);
+    glutTimerFunc(50, timer, 0);
 }
 
 void init() {
@@ -234,6 +218,6 @@ int main(int argc, char** argv) {
     glutCreateWindow("Interactive Graphics Clock");
     init();
     glutDisplayFunc(display);
-    glutTimerFunc(1000, timer, 0);
+    glutTimerFunc(50, timer, 0);
     glutMainLoop();
 }
